@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "C++ Compiler"
+description = "A browser-based C++ playground for writing, compiling, and running small C++ programs with clear diagnostics, starter examples, and a responsive editor experience."
+version = "1.0.0"
+id = "artifacts/cpp-compiler"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19505
+
+[services.development]
+run = "pnpm --filter @workspace/cpp-compiler run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/cpp-compiler", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/cpp-compiler/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19505"
+BASE_PATH = "/"
