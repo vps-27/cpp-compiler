@@ -1,0 +1,108 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: compiler
+    description: C++ compilation and execution
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /compile:
+    post:
+      operationId: compileCpp
+      tags: [compiler]
+      summary: Compile and run C++ source
+      description: Compiles a C++17 program in an isolated temporary workspace and returns its output or diagnostics.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompileCppInput"
+      responses:
+        "200":
+          description: Compilation result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompileCppResult"
+        "400":
+          description: Invalid source
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "408":
+          description: Compilation or execution timed out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompileCppResult"
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    CompileCppInput:
+      type: object
+      properties:
+        source:
+          type: string
+          minLength: 1
+          maxLength: 100000
+        stdin:
+          type: string
+          maxLength: 20000
+      required:
+        - source
+    CompileCppResult:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [success, compile_error, runtime_error, timeout]
+        stdout:
+          type: string
+        stderr:
+          type: string
+        exitCode:
+          type: ["integer", "null"]
+        durationMs:
+          type: integer
+      required:
+        - status
+        - stdout
+        - stderr
+        - exitCode
+        - durationMs
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
