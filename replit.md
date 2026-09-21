@@ -1,6 +1,6 @@
-# [Project name]
+# C++ Compiler
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A browser-based C++17 playground for writing, compiling, and running small programs with clear diagnostics.
 
 ## Run & Operate
 
@@ -22,23 +22,28 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/cpp-compiler` — responsive React/Vite compiler interface
+- `artifacts/api-server/src/routes/compile.ts` — isolated C++ compile/run endpoint
+- `lib/api-spec/openapi.yaml` — source of truth for the compile API contract
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- The frontend uses the generated API hook for the compile request so the request and response stay aligned with OpenAPI.
+- Compilation and execution happen in a temporary server-side directory with separate compile and run time limits.
+- Programs compile with GCC using the C++17 standard and bounded output to keep the playground responsive.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+Users can edit C++ source, provide optional stdin, choose starter examples, run programs, inspect stdout and stderr, and see exit code and duration.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+No additional preferences recorded.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- The API server needs `g++` available on the host to compile submissions.
+- The app should be run through its managed artifact workflow so `PORT` and `BASE_PATH` are supplied.
 
 ## Pointers
 
