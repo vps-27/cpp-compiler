@@ -16,9 +16,6 @@ import {
   TriangleAlert,
   XCircle,
 } from 'lucide-react';
-// The workspace package's checked-in declaration cache predates the compile endpoint.
-// The runtime export is generated and available from the package source.
-// @ts-expect-error CompileCpp is present in the generated runtime module.
 import { useCompileCpp } from '@workspace/api-client-react';
 
 type CompileCppResult = {
